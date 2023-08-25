@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seleção de Origem e Destino</title>
+</head>
+<body>
+  <h1>Selecione a Origem e o Destino</h1>
+  <form>
+    <label for="origem">Origem:</label>
+    <select id="origem" name="origem">
+      <% locals.forEach(local => { %>
+        <option value="<%= local.id %>"><%= local.name %></option>
+      <% }); %>
+    </select>
+    <br>
+    <label for="destino">Destino:</label>
+    <select id="destino" name="destino">
+      <% locals.forEach(local => { %>
+        <option value="<%= local.id %>"><%= local.name %></option>
+      <% }); %>
+    </select>
+    <br>
+    <button type="button" id="buscarRotas">Buscar Rotas</button>
+  </form>
+
+  <div id="instructions">
+    <!-- Aqui serão exibidas as instruções de rota -->
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const origemSelect = document.getElementById('origem');
+      const destinoSelect = document.getElementById('destino');
+      const instructionsDiv = document.getElementById('instructions');
+
+      const updateInstructions = async () => {
+        const origemId = origemSelect.value;
+        const destinoId = destinoSelect.value;
+
+        try {
+          const response = await fetch(`/getInstructions?origem=${origemId}&destino=${destinoId}`);
+          const instructions = await response.json();
+
+          // Limpar as instruções anteriores
+          instructionsDiv.innerHTML = '';
+
+          // Adicionar as novas instruções
+          instructions.forEach(instruction => {
+            const instructionItem = document.createElement('p');
+            instructionItem.textContent = instruction.instrucao;
+            instructionsDiv.appendChild(instructionItem);
+          });
+        } catch (error) {
+          console.error('Erro ao buscar instruções:', error);
+        }
+      };
+
+      const buscarRotasButton = document.getElementById('buscarRotas');
+      buscarRotasButton.addEventListener('click', updateInstructions);
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seleção de Origem e Destino</title>
+</head>
+<body>
+  <h1>Selecione a Origem e o Destino</h1>
+  <form action="/directions" method="GET">
+    <label for="origem">Origem:</label>
+    <select id="origem" name="origem">
+      <% locals.forEach(local => { %>
+        <option value="<%= local.id %>"><%= local.name %></option>
+      <% }); %>
+    </select>
+    <br>
+    <label for="destino">Destino:</label>
+    <select id="destino" name="destino">
+      <% locals.forEach(local => { %>
+        <option value="<%= local.id %>"><%= local.name %></option>
+      <% }); %>
+    </select>
+    <br>
+    <button type="submit">Buscar Rotas</button>
+  </form>
+</body>
+</html>
+
