@@ -1,42 +1,51 @@
 const express = require('express');
-const path = require('path');
-const pool = require('./database');
-
+const { Pool } = require('pg');
 const app = express();
-const port = 3000;
+const port = 3000; // Escolha a porta que desejar
 
-app.set('views', path.join(__dirname, 'views'));
+// Configuração da conexão com o banco de dados
+const pool = new Pool({
+  user: 'teste',
+  host: 'localhost', // Ou endereço do servidor PostgreSQL
+  database: 'indoor_routes',
+  password: 'teste',
+  port: 5432, // Porta padrão do PostgreSQL
+});
+
+// Configuração do Express para usar EJS como mecanismo de template
 app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 
+// Rota para renderizar a página inicial
 app.get('/', async (req, res) => {
   try {
-    const localsQuery = 'SELECT * FROM locals';
-    const localsResult = await pool.query(localsQuery);
-    const locals = localsResult.rows;
+    const query = 'SELECT * FROM locais'; // Substitua 'locais' pelo nome da sua tabela
+    const { rows } = await pool.query(query);
 
-    res.render('index', { locals });
+    res.render('index.ejs', { locals: rows });
   } catch (error) {
-    console.error('Erro ao recuperar locais:', error);
+    console.error(error);
     res.status(500).send('Erro interno do servidor');
   }
 });
 
-app.get('/getInstructions', async (req, res) => {
+// Rota para processar o formulário de busca de rotas
+app.get('/directions', async (req, res) => {
   try {
-    const origemId = req.query.origem;
-    const destinoId = req.query.destino;
+    const origem = req.query.origem;
+    const destino = req.query.destino;
 
-    const instructionsQuery = 'SELECT instrucao FROM instructions WHERE origem_id = $1 AND destino_id = $2';
-    const instructionsResult = await pool.query(instructionsQuery, [origemId, destinoId]);
-    const instructions = instructionsResult.rows;
+    // Implemente a lógica para encontrar a rota mais próxima no banco de dados aqui
 
-    res.json(instructions);
+    // Renderize a página com as direções ou a representação visual da rota
+    res.render('directions.ejs', { /* Dados da rota encontrada */ });
   } catch (error) {
-    console.error('Erro ao buscar instruções:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error(error);
+    res.status(500).send('Erro interno do servidor');
   }
 });
 
+// Inicie o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
