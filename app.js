@@ -40,16 +40,27 @@ app.get('/directions', async (req, res) => {
 
   try {
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM locals');
-    const locals = result.rows;
-    
-    // Substitua 'yourGraph' pelo seu grafo real
-    const yourGraph = {
-      // Defina a estrutura do seu grafo aqui
-    };
 
-    const shortestPath = routeFinder.dijkstra(yourGraph, originId, destinationId);
-    const distance = calculateDistance(yourGraph, shortestPath);
+    // Consulta SQL para obter as conexões do banco de dados
+    const connectionsQuery = 'SELECT * FROM connections';
+    const connectionsResult = await client.query(connectionsQuery);
+    const connections = connectionsResult.rows;
+
+    // Construa o grafo a partir das conexões
+    const graph = {};
+
+    connections.forEach(connection => {
+      const { origin_id, destination_id, distance } = connection;
+      if (!graph[origin_id]) {
+        graph[origin_id] = {};
+      }
+      graph[origin_id][destination_id] = distance;
+    });
+
+    // Calcule a rota mais curta usando o grafo construído
+    const shortestPath = routeFinder.dijkstra(graph, originId, destinationId);
+    const distance = calculateDistance(graph, shortestPath);
+
     client.release();
 
     res.render('directions.ejs', { shortestPath, distance });
@@ -66,7 +77,8 @@ function calculateDistance(graph, path) {
   for (let i = 0; i < path.length - 1; i++) {
     const currentNode = path[i];
     const nextNode = path[i + 1];
-    distance += graph[currentNode][nextNode];
+    const connectionDistance = parseInt(graph[currentNode][nextNode], 10); // Converter para número
+    distance += connectionDistance;
   }
 
   return distance;
