@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rota Encontrada</title>
+  <title>Directions</title>
 </head>
 <body>
-  <h1>Rota Encontrada</h1>
+  <h1>Directions</h1>
   <p>A rota mais próxima entre os pontos de origem e destino é:</p>
   <ul>
     <% shortestPath.forEach(point => { %>
@@ -14,6 +14,12 @@
     <% }); %>
   </ul>
   <p>A distância total é: <%= distance %> metros.</p>
+  <p>Instruções:</p>
+  <ol>
+    <% instructions.forEach(instruction => { %>
+      <li><%= instruction %></li>
+    <% }); %>
+  </ol>
 </body>
 </html>
 

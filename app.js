@@ -67,6 +67,11 @@ app.get('/directions', async (req, res) => {
     const connectionsResult = await client.query(connectionsQuery);
     const connections = connectionsResult.rows;
 
+    // Consulta SQL para obter os locais do banco de dados
+    const localsQuery = 'SELECT * FROM locals';
+    const localsResult = await client.query(localsQuery);
+    const localsMap = new Map(localsResult.rows.map(row => [row.id, row.name]));
+
     // Construa o grafo a partir das conexões
     const graph = {};
 
@@ -101,15 +106,17 @@ app.get('/directions', async (req, res) => {
     } else if (routeFromDestinationToOrigin) {
       shortestRoute = routeFromDestinationToOrigin.reverse(); // Inverta a ordem da rota
     }
+if (shortestRoute) {
+  const distance = calculateDistance(graph, shortestRoute);
+  const instructions = await generateInstructions(graph, shortestRoute, localsMap); // Alteração aqui
+  client.release();
+  res.render('directions.ejs', { shortestPath: shortestRoute, distance, instructions });
+} else {
+  client.release();
+  res.send('Rota não encontrada');
+}
 
-    if (shortestRoute) {
-      const distance = calculateDistance(graph, shortestRoute);
-      client.release();
-      res.render('directions.ejs', { shortestPath: shortestRoute, distance });
-    } else {
-      client.release();
-      res.send('Rota não encontrada');
-    }
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro no servidor');
@@ -131,6 +138,70 @@ function calculateDistance(graph, path) {
   }
 
   return distance;
+}
+
+// Função para gerar instruções com base na rota
+async function generateInstructions(graph, path, localsMap) {
+  const instructions = [];
+  try {
+    const client = await pool.connect();
+    for (let i = 0; i < path.length - 1; i++) {
+      const currentNode = path[i];
+      const nextNode = path[i + 1];
+
+      if (graph[currentNode] && graph[currentNode][nextNode]) {
+        const distance = parseInt(graph[currentNode][nextNode], 10);
+        const direction = getDirection(currentNode, nextNode, localsMap);
+        const currentLocalId = currentNode;
+        const nextLocalId = nextNode;
+
+        // Consulta SQL para obter o nome do local atual
+        const currentLocalQuery = `SELECT name FROM locals WHERE id = ${currentLocalId}`;
+        const currentLocalResult = await client.query(currentLocalQuery);
+        const currentLocalName = currentLocalResult.rows[0].name;
+
+        // Consulta SQL para obter o nome do próximo local
+        const nextLocalQuery = `SELECT name FROM locals WHERE id = ${nextLocalId}`;
+        const nextLocalResult = await client.query(nextLocalQuery);
+        const nextLocalName = nextLocalResult.rows[0].name;
+
+        // Define a direção correta com base na distância
+        let turnDirection = '';
+        if (distance === 22) {
+          // Verifica a ordem dos locais para determinar a direção
+          const currentLocalNumber = parseInt(currentLocalName.replace('Sala ', ''), 10);
+          const nextLocalNumber = parseInt(nextLocalName.replace('Sala ', ''), 10);
+          if (currentLocalNumber < nextLocalNumber) {
+            turnDirection = 'direita';
+          } else {
+            turnDirection = 'esquerda';
+          }
+          instructions.push(`Vire a ${turnDirection}.`);
+        } else {
+          instructions.push(`Siga de ${currentLocalName} para ${nextLocalName} por ${distance} metros.`);
+        }
+      }
+    }
+    instructions.push('Você chegou ao seu destino.');
+    client.release();
+  } catch (err) {
+    console.error(err);
+    instructions.push('Erro ao gerar instruções.');
+  }
+  return instructions;
+}
+
+
+// Função para determinar a direção (esquerda ou direita)
+function getDirection(currentNode, nextNode, localsMap) {
+  const currentLocal = localsMap.get(currentNode);
+  const nextLocal = localsMap.get(nextNode);
+
+  // Implemente sua lógica de direção aqui com base nas coordenadas ou outros critérios.
+  // Por exemplo, compare as coordenadas dos locais para determinar a direção.
+
+  // Por padrão, retornaremos "direita" como exemplo.
+  return 'direita';
 }
 
 // Inicie o servidor
