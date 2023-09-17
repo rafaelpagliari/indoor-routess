@@ -19,6 +19,27 @@ const routeFinder = require('./routeFinder');
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
+// Função para encontrar uma rota usando busca em profundidade (DFS)
+function findRoute(graph, start, end, visited = new Set(), route = []) {
+  if (start === end) {
+    // Chegou ao destino, retorne a rota encontrada
+    return [...route, start];
+  }
+
+  visited.add(start);
+
+  for (const neighbor in graph[start]) {
+    if (!visited.has(neighbor)) {
+      const foundRoute = findRoute(graph, neighbor, end, visited, [...route, start]);
+      if (foundRoute) {
+        return foundRoute;
+      }
+    }
+  }
+
+  return null; // Rota não encontrada
+}
+
 // Rota para renderizar a página inicial
 app.get('/', async (req, res) => {
   try {
@@ -57,13 +78,17 @@ app.get('/directions', async (req, res) => {
       graph[origin_id][destination_id] = distance;
     });
 
-    // Calcule a rota mais curta usando o grafo construído
-    const shortestPath = routeFinder.dijkstra(graph, originId, destinationId);
-    const distance = calculateDistance(graph, shortestPath);
+    // Encontre a rota usando busca em profundidade (DFS)
+    const route = findRoute(graph, originId, destinationId);
 
-    client.release();
-
-    res.render('directions.ejs', { shortestPath, distance });
+    if (route) {
+      const distance = calculateDistance(graph, route);
+      client.release();
+      res.render('directions.ejs', { shortestPath: route, distance }); // Corrigido para "shortestPath"
+    } else {
+      client.release();
+      res.send('Rota não encontrada');
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro no servidor');
@@ -77,8 +102,11 @@ function calculateDistance(graph, path) {
   for (let i = 0; i < path.length - 1; i++) {
     const currentNode = path[i];
     const nextNode = path[i + 1];
-    const connectionDistance = parseInt(graph[currentNode][nextNode], 10); // Converter para número
-    distance += connectionDistance;
+
+    // Verifique se há uma conexão direta entre currentNode e nextNode
+    if (graph[currentNode][nextNode]) {
+      distance += parseInt(graph[currentNode][nextNode], 10);
+    }
   }
 
   return distance;
