@@ -78,13 +78,34 @@ app.get('/directions', async (req, res) => {
       graph[origin_id][destination_id] = distance;
     });
 
-    // Encontre a rota usando busca em profundidade (DFS)
-    const route = findRoute(graph, originId, destinationId);
+    // Encontre a rota de origem para destino
+    const routeFromOriginToDestination = findRoute(graph, originId, destinationId);
 
-    if (route) {
-      const distance = calculateDistance(graph, route);
+    // Encontre a rota de destino para origem
+    const routeFromDestinationToOrigin = findRoute(graph, destinationId, originId);
+
+    let shortestRoute = null;
+
+    // Verifique qual rota é mais curta (ou se ambas são nulas)
+    if (routeFromOriginToDestination && routeFromDestinationToOrigin) {
+      const distanceOriginToDestination = calculateDistance(graph, routeFromOriginToDestination);
+      const distanceDestinationToOrigin = calculateDistance(graph, routeFromDestinationToOrigin);
+
+      if (distanceOriginToDestination <= distanceDestinationToOrigin) {
+        shortestRoute = routeFromOriginToDestination;
+      } else {
+        shortestRoute = routeFromDestinationToOrigin.reverse(); // Inverta a ordem da rota
+      }
+    } else if (routeFromOriginToDestination) {
+      shortestRoute = routeFromOriginToDestination;
+    } else if (routeFromDestinationToOrigin) {
+      shortestRoute = routeFromDestinationToOrigin.reverse(); // Inverta a ordem da rota
+    }
+
+    if (shortestRoute) {
+      const distance = calculateDistance(graph, shortestRoute);
       client.release();
-      res.render('directions.ejs', { shortestPath: route, distance }); // Corrigido para "shortestPath"
+      res.render('directions.ejs', { shortestPath: shortestRoute, distance });
     } else {
       client.release();
       res.send('Rota não encontrada');
@@ -104,7 +125,7 @@ function calculateDistance(graph, path) {
     const nextNode = path[i + 1];
 
     // Verifique se há uma conexão direta entre currentNode e nextNode
-    if (graph[currentNode][nextNode]) {
+    if (graph[currentNode] && graph[currentNode][nextNode]) {
       distance += parseInt(graph[currentNode][nextNode], 10);
     }
   }
