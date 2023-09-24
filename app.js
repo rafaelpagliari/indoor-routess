@@ -3,13 +3,12 @@ const { Pool } = require('pg');
 const app = express();
 const port = 3000;
 
-// Configuração da conexão com o banco de dados
 const pool = new Pool({
   user: 'teste',
-  host: 'localhost', // Ou endereço do servidor PostgreSQL
+  host: 'localhost',
   database: 'indoor_routes',
   password: 'teste',
-  port: 5432, // Porta padrão do PostgreSQL
+  port: 5432,
 });
 
 // Importe a lógica de busca de rotas
@@ -197,14 +196,10 @@ function getDirection(currentNode, nextNode, localsMap) {
   const currentLocal = localsMap.get(currentNode);
   const nextLocal = localsMap.get(nextNode);
 
-  // Implemente sua lógica de direção aqui com base nas coordenadas ou outros critérios.
-  // Por exemplo, compare as coordenadas dos locais para determinar a direção.
-
-  // Por padrão, retornaremos "direita" como exemplo.
+  // Por padrão, "direita" como exemplo.
   return 'direita';
 }
 
-// Inicie o servidor
 app.listen(port, () => {
   console.log(`Servidor está rodando na porta ${port}`);
 });
