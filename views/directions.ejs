@@ -45,6 +45,18 @@
       list-style-type: decimal;
       padding-left: 20px;
     }
+    button {
+      background-color: #009688;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #007e6e;
+    }
   </style>
 </head>
 <body>
@@ -62,6 +74,15 @@
       <li><%= instruction %></li>
     <% }); %>
   </ol>
+
+  <div style="text-align: center;">
+    <button type="button" data-href="http://186.237.57.155:3000" aria-label="Ir para a página inicial">Página inicial</button>
+  </div>
+  <script>
+    document.querySelector("button").addEventListener("click", function() {
+      location.href = this.dataset.href;
+    });
+  </script>
 </body>
 </html>
 

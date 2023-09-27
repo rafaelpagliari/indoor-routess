@@ -56,4 +56,4 @@ function dijkstra(graph, startNode, endNode) {
 module.exports = {
   dijkstra,
 };
-
+//https://elemarjr.com/clube-de-estudos/algoritmo-de-dijkstra-entendendo-o-caminho-minimo-em-grafos-ponderados/#:~:text=O%20Algoritmo%20de%20Dijkstra%20%C3%A9%20uma%20ferramenta%20muito%20%C3%BAtil%20para,pontos%20em%20um%20grafo%20ponderado.
