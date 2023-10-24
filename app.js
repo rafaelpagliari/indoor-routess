@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 const app = express();
 const port = 3000;
 
+//ajuste
 const pool = new Pool({
   user: 'teste',
   host: 'localhost',
