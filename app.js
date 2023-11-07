@@ -14,6 +14,7 @@ const pool = new Pool({
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // Adicione o suporte para JSON no body-parser
 
 
 // Importe a lógica de busca de rotas
@@ -30,19 +31,19 @@ app.get('/cadastro-evento', (req, res) => {
 
 // Rota para lidar com o envio do formulário e inserção de dados no banco
 app.post('/cadastro-evento', (req, res) => {
-  const { tipo, titulo, descricao, data, id_locals } = req.body;
+    const { tipo, titulo, descricao, data, id_locals } = req.body;
 
-  // Aqui você pode inserir os dados no banco usando o pool do PostgreSQL
-  // Certifique-se de validar os dados e usar consultas preparadas para segurança
+    // Aqui você pode inserir os dados no banco usando o pool do PostgreSQL
+    // Certifique-se de validar os dados e usar consultas preparadas para segurança
 
-  // Exemplo simples de inserção de dados no banco
-  pool.query('INSERT INTO eventos (tipo, titulo, descricao, data, id_locals) VALUES ($1, $2, $3, $4, $5)', [tipo, titulo, descricao, data, id_locals], (error, results) => {
-    if (error) {
-      res.render('eventos.ejs', { mensagemErro: 'Erro ao cadastrar o evento.' });
-    } else {
-      res.render('eventos.ejs', { mensagemSucesso: 'Evento cadastrado com sucesso.' });
-    }
-  });
+    // Exemplo simples de inserção de dados no banco
+    pool.query('INSERT INTO eventos (tipo, titulo, descricao, data, id_locals) VALUES ($1, $2, $3, $4, $5)', [tipo, titulo, descricao, data, id_locals], (error, results) => {
+        if (error) {
+            res.send('Erro ao cadastrar o evento.');
+        } else {
+            res.send('Evento cadastrado com sucesso.');
+        }
+    });
 });
 
 // Função para encontrar uma rota usando busca em profundidade (DFS)

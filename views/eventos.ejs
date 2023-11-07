@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Eventos</title>
   <style>
-    /* Seu estilo CSS aqui */
     body {
       font-family: Arial, sans-serif;
       background-color: #f2f2f2;
@@ -32,7 +31,7 @@
       color: #333;
     }
 
-    select, input[type="text"], textarea {
+    select {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -51,13 +50,6 @@
 
     button:hover {
       background-color: #007e6e;
-    }
-
-    #success-message {
-      color: green;
-      font-weight: bold;
-      display: none;
-      margin-top: 10px;
     }
   </style>
 </head>
@@ -87,51 +79,8 @@
     <input type="text" name="id_locals" id="id_locals" required>
     <br>
 
-    <button type="submit">Cadastrar Evento</button>
+    <input type="submit" value="Cadastrar Evento">
   </form>
-
-  <div id="success-message"></div>
-
-  <script>
-    // Função para mostrar a mensagem de sucesso
-    function showSuccessMessage(message) {
-      const successMessage = document.getElementById('success-message');
-      successMessage.innerText = message;
-      successMessage.style.display = 'block';
-    }
-
-    // Manipulador de envio do formulário
-    document.querySelector('form').addEventListener('submit', async (e) => {
-      e.preventDefault(); // Impede o envio padrão do formulário
-
-      const tipo = document.getElementById('tipo').value;
-      const titulo = document.getElementById('titulo').value;
-      const descricao = document.getElementById('descricao').value;
-      const data = document.getElementById('data').value;
-      const id_locals = document.getElementById('id_locals').value;
-
-      // Enviar dados do formulário usando AJAX
-      try {
-        const response = await fetch('/cadastro-evento', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ tipo, titulo, descricao, data, id_locals }),
-        });
-
-        if (response.status === 200) {
-          const data = await response.json();
-          showSuccessMessage(data.message); // Exibe a mensagem de sucesso
-        } else {
-          const data = await response.json();
-          alert('Erro ao cadastrar o evento: ' + data.message);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    });
-  </script>
 </body>
 </html>
 
