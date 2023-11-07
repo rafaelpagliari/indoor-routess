@@ -2,15 +2,19 @@ const express = require('express');
 const { Pool } = require('pg');
 const app = express();
 const port = 3000;
+const bodyParser = require('body-parser'); // Importe o body-parser
 
 //ajuste
 const pool = new Pool({
   user: 'teste',
   host: 'localhost',
   database: 'indoor_routes',
-  password: 'teste',
+  password: 'sua_senha',
   port: 5432,
 });
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 // Importe a lógica de busca de rotas
 const routeFinder = require('./routeFinder');
@@ -18,6 +22,28 @@ const routeFinder = require('./routeFinder');
 // Configuração do mecanismo de template EJS
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
+
+
+app.get('/cadastro-evento', (req, res) => {
+  res.render('eventos.ejs'); // Renderiza a página 'eventos.ejs'
+});
+
+// Rota para lidar com o envio do formulário e inserção de dados no banco
+app.post('/cadastro-evento', (req, res) => {
+  const { tipo, titulo, descricao, data, id_locals } = req.body;
+
+  // Aqui você pode inserir os dados no banco usando o pool do PostgreSQL
+  // Certifique-se de validar os dados e usar consultas preparadas para segurança
+
+  // Exemplo simples de inserção de dados no banco
+  pool.query('INSERT INTO eventos (tipo, titulo, descricao, data, id_locals) VALUES ($1, $2, $3, $4, $5)', [tipo, titulo, descricao, data, id_locals], (error, results) => {
+    if (error) {
+      res.render('eventos.ejs', { mensagemErro: 'Erro ao cadastrar o evento.' });
+    } else {
+      res.render('eventos.ejs', { mensagemSucesso: 'Evento cadastrado com sucesso.' });
+    }
+  });
+});
 
 // Função para encontrar uma rota usando busca em profundidade (DFS)
 function findRoute(graph, start, end, visited = new Set(), route = []) {
