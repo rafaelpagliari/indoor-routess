@@ -51,13 +51,13 @@
     button:hover {
       background-color: #007e6e;
     }
-    .evento-box {
-      background-color: #f2f2f2;
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+      .evento-box {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
@@ -71,11 +71,6 @@
         <option value="<%= local.id %>"><%= local.name %></option>
       <% }); %>
     </select>
-
-    <!-- Div para exibir informações do evento -->
-    <div id="evento-info">
-      <!-- As informações do evento serão exibidas aqui -->
-    </div>
 
     <!-- Destino -->
     <label for="destino">Destino:</label>
@@ -92,38 +87,49 @@
     <button type="submit">Buscar Rotas</button>
   </form>
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const destinoSelect = document.getElementById('destino');
-    const eventoInfoDiv = document.getElementById('evento-info');
+	  document.addEventListener('DOMContentLoaded', function () {
+  const destinoSelect = document.getElementById('destino');
+  const eventoInfoContainer = document.getElementById('evento-info-container');
 
-    destinoSelect.addEventListener('change', function () {
-      const selectedLocationId = destinoSelect.value;
+  destinoSelect.addEventListener('change', function () {
+    const selectedLocationId = destinoSelect.value;
 
-      if (selectedLocationId) {
-        fetch(`/get-event-info?locationId=${selectedLocationId}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.eventInfo) {
-              eventoInfoDiv.innerHTML = `
-                <h2>Destino:</h2>
-                <p><strong>Título:</strong> ${data.eventInfo.titulo}</p>
-                <p><strong>Descrição:</strong> ${data.eventInfo.descricao}</p>
-                <p><strong>Data:</strong> ${data.eventInfo.data}</p>
+    if (selectedLocationId) {
+      fetch(`/get-event-info?locationId=${selectedLocationId}`)
+        .then(response => response.json())
+        .then(data => {
+          eventoInfoContainer.innerHTML = ''; // Limpe o conteúdo anterior
+
+          if (data.eventInfo) {
+            data.eventInfo.forEach(event => {
+              // Crie uma caixa para cada evento
+              const eventBox = document.createElement('div');
+              eventBox.classList.add('evento-box');
+
+              eventBox.innerHTML = `
+                <h2>Evento:</h2>
+                <p><strong>Título:</strong> ${event.titulo}</p>
+                <p><strong>Descrição:</strong> ${event.descricao}</p>
+                <p><strong>Data:</strong> ${event.data}</p>
               `;
-            } else {
-              eventoInfoDiv.innerHTML = '<p>Nenhum evento disponível para este local.</p>';
-            }
-          })
-          .catch(error => {
-            console.error('Erro ao buscar informações do evento:', error);
-          });
-      } else {
-        eventoInfoDiv.innerHTML = '';
-      }
-    });
-  });
-</script>
 
+              // Adicione a caixa de evento ao contêiner
+              eventoInfoContainer.appendChild(eventBox);
+            });
+          } else {
+            eventoInfoContainer.innerHTML = '<p>Nenhum evento disponível para este local.</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao buscar informações do evento:', error);
+        });
+    } else {
+      eventoInfoContainer.innerHTML = '';
+    }
+  });
+});
+
+  </script>
 </body>
 </html>
 

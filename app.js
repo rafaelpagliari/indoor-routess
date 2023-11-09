@@ -49,7 +49,7 @@ app.post('/cadastro-evento', (req, res) => {
 app.get('/get-event-info', async (req, res) => {
   const locationId = req.query.locationId;
 
-  // Consulta SQL para obter informações do evento
+  // Consulta SQL para obter informações de todos os eventos associados ao local
   const eventQuery = 'SELECT tipo, titulo, descricao, data FROM eventos WHERE id_locals = $1';
   try {
     const client = await pool.connect();
@@ -57,7 +57,7 @@ app.get('/get-event-info', async (req, res) => {
     client.release();
 
     if (eventResult.rows.length > 0) {
-      const eventInfo = eventResult.rows[0];
+      const eventInfo = eventResult.rows;
       res.json({ eventInfo });
     } else {
       res.json({ eventInfo: null });

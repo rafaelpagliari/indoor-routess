@@ -87,30 +87,41 @@
     <div id="message"></div>
 
     <script>
-        const form = document.querySelector('form');
-        const messageDiv = document.getElementById('message');
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(form);
-            const response = await fetch('/cadastro-evento', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                if (result.success) {
-                    messageDiv.innerHTML = '<p style="color: green;">' + result.message + '</p>';
+        // Função para mostrar a mensagem de sucesso
+        function showSuccessMessage(message) {
+            const successMessage = document.getElementById('message');
+            successMessage.innerText = message;
+            successMessage.style.display = 'block';
+        }
+        // Manipulador de envio do formulário
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Impede o envio padrão do formulário
+            const tipo = document.getElementById('tipo').value;
+            const titulo = document.getElementById('titulo').value;
+            const descricao = document.getElementById('descricao').value;
+            const data = document.getElementById('data').value;
+            const id_locals = document.getElementById('id_locals').value;
+            // Enviar dados do formulário usando AJAX
+            try {
+                const response = await fetch('/cadastro-evento', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ tipo, titulo, descricao, data, id_locals }),
+                });
+                if (response.status === 200) {
+                    const data = await response.json();
+                    showSuccessMessage(data.message); // Exibe a mensagem de sucesso
                 } else {
-                    messageDiv.innerHTML = '<p style="color: red;">' + result.message + '</p>';
+                    const data = await response.json();
+                    alert('Erro ao cadastrar o evento: ' + data.message);
                 }
+            } catch (error) {
+                console.error(error);
             }
         });
     </script>
-
 </body>
-
 </html>
 
