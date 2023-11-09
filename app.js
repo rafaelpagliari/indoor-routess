@@ -39,12 +39,35 @@ app.post('/cadastro-evento', (req, res) => {
     // Exemplo simples de inserção de dados no banco
     pool.query('INSERT INTO eventos (tipo, titulo, descricao, data, id_locals) VALUES ($1, $2, $3, $4, $5)', [tipo, titulo, descricao, data, id_locals], (error, results) => {
         if (error) {
-            res.send('Erro ao cadastrar o evento.');
+            res.status(500).json({ success: false, message: 'Erro ao cadastrar o evento.' });
         } else {
-            res.send('Evento cadastrado com sucesso.');
+            res.status(200).json({ success: true, message: 'Evento cadastrado com sucesso.' });
         }
     });
 });
+
+app.get('/get-event-info', async (req, res) => {
+  const locationId = req.query.locationId;
+
+  // Consulta SQL para obter informações do evento
+  const eventQuery = 'SELECT tipo, titulo, descricao, data FROM eventos WHERE id_locals = $1';
+  try {
+    const client = await pool.connect();
+    const eventResult = await client.query(eventQuery, [locationId]);
+    client.release();
+
+    if (eventResult.rows.length > 0) {
+      const eventInfo = eventResult.rows[0];
+      res.json({ eventInfo });
+    } else {
+      res.json({ eventInfo: null });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar informações do evento:', error);
+    res.status(500).json({ eventInfo: null });
+  }
+});
+
 
 // Função para encontrar uma rota usando busca em profundidade (DFS)
 function findRoute(graph, start, end, visited = new Set(), route = []) {
@@ -231,4 +254,3 @@ function getDirection(currentNode, nextNode, localsMap) {
 app.listen(port, () => {
   console.log(`Servidor está rodando na porta ${port}`);
 });
-
