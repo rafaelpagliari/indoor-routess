@@ -96,6 +96,19 @@ module.exports = (app, pool) => {
         }
     });
 
+	app.get('/get-locals', async (req, res) => {
+  try {
+    const localsQuery = 'SELECT id, name FROM locals'; // Nome correto da tabela
+    const localsResult = await pool.query(localsQuery);
+    const locals = localsResult.rows;
+    res.json({ locals });
+  } catch (error) {
+    console.error('Erro ao buscar locais:', error);
+    res.status(500).json({ locals: [] });
+  }
+});
+
+
     // Função para encontrar uma rota usando busca em profundidade (DFS)
     function findRoute(graph, start, end, visited = new Set(), route = []) {
         if (start === end) {
@@ -118,21 +131,28 @@ module.exports = (app, pool) => {
     }
 
     // Função para calcular a distância da rota
-    function calculateDistance(graph, path) {
-        let distance = 0;
+function calculateDistance(graph, path) {
+    let distance = 0;
 
-        for (let i = 0; i < path.length - 1; i++) {
-            const currentNode = path[i];
-            const nextNode = path[i + 1];
+    for (let i = 0; i < path.length - 1; i++) {
+        const currentNode = path[i];
+        const nextNode = path[i + 1];
 
-            // Verifique se há uma conexão direta entre currentNode e nextNode
-            if (graph[currentNode] && graph[currentNode][nextNode]) {
-                distance += parseInt(graph[currentNode][nextNode], 10);
-            }
+        // Verifique se há uma conexão direta entre currentNode e nextNode
+        if (graph[currentNode] && graph[currentNode][nextNode]) {
+            distance += parseInt(graph[currentNode][nextNode], 10);
+        } else if (graph[nextNode] && graph[nextNode][currentNode]) {
+            // Se não houver conexão direta na primeira direção, verifique na direção oposta
+            distance += parseInt(graph[nextNode][currentNode], 10);
+        } else {
+            console.error('Conexão não encontrada entre', currentNode, 'e', nextNode);
+            // Lide com o caso em que não há conexão direta nas duas direções
+            // Você pode lançar uma exceção, retornar um valor padrão, ou fazer algo diferente conforme necessário.
         }
-
-        return distance;
     }
+
+    return distance;
+}
 
     return router;
 };

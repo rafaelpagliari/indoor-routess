@@ -5,6 +5,7 @@ const verifyJWT = require('/var/www/html2/verifyJWT');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const router = require('../routes/router'); // Importe o roteador
+const cors = require('cors');
 
 const app = express();
 const port = 3001;
@@ -16,6 +17,8 @@ const pool = new Pool({
   password: 'sua_senha',
   port: 5432,
 });
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -60,6 +63,7 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ message: 'Erro interno do servidor' });
     }
 });
+
 
 app.use(verifyJWT);
 

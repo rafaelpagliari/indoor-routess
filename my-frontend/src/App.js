@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import axios from 'axios';
+import Login from './components/Login';
+import SelectRoute from './components/SelectRoute'
 
-function App() {
+const App = () => {
+  const [token, setToken] = useState(localStorage.getItem('token') || null);
+
+  // Adiciona o token às configurações padrão do Axios
+  useEffect(() => {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }, [token]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/login"
+          element={<Login setToken={(newToken) => {
+            setToken(newToken);
+            // Armazena o novo token no localStorage
+            localStorage.setItem('token', newToken);
+          }} />}
+        />
+	          <Route path="/SelectRoute" element={<SelectRoute />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
