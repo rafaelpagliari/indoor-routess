@@ -35,6 +35,27 @@ module.exports = (app, pool) => {
         }
     });
 
+	app.get('/get-event-list', async (req, res) => {
+  const eventQuery = 'SELECT tipo, titulo, descricao, data FROM eventos';
+
+  try {
+    const client = await pool.connect();
+    const eventResult = await client.query(eventQuery);
+    client.release();
+
+    if (eventResult.rows.length > 0) {
+      const eventList = eventResult.rows;
+      res.json({ eventList });
+    } else {
+      res.json({ eventList: [] });
+    }
+  } catch (error) {
+    console.error('Erro ao buscar lista de eventos:', error);
+    res.status(500).json({ eventList: [] });
+  }
+});
+
+
     app.get('/directions', async (req, res) => {
         const originId = req.query.origem;
         const destinationId = req.query.destino;
@@ -42,12 +63,10 @@ module.exports = (app, pool) => {
         try {
             const client = await pool.connect();
 
-            // Consulta SQL para obter as conexões do banco de dados
             const connectionsQuery = 'SELECT * FROM connections';
             const connectionsResult = await client.query(connectionsQuery);
             const connections = connectionsResult.rows;
 
-            // Construa o grafo a partir das conexões
             const graph = {};
 
             connections.forEach(connection => {
@@ -58,15 +77,12 @@ module.exports = (app, pool) => {
                 graph[origin_id][destination_id] = distance;
             });
 
-            // Encontre a rota de origem para destino
             const routeFromOriginToDestination = findRoute(graph, originId, destinationId);
 
-            // Encontre a rota de destino para origem
             const routeFromDestinationToOrigin = findRoute(graph, destinationId, originId);
 
             let shortestRoute = null;
 
-            // Verifique qual rota é mais curta (ou se ambas são nulas)
             if (routeFromOriginToDestination && routeFromDestinationToOrigin) {
                 const distanceOriginToDestination = calculateDistance(graph, routeFromOriginToDestination);
                 const distanceDestinationToOrigin = calculateDistance(graph, routeFromDestinationToOrigin);
@@ -98,7 +114,7 @@ module.exports = (app, pool) => {
 
 	app.get('/get-locals', async (req, res) => {
   try {
-    const localsQuery = 'SELECT id, name FROM locals'; // Nome correto da tabela
+    const localsQuery = 'SELECT id, name FROM locals';
     const localsResult = await pool.query(localsQuery);
     const locals = localsResult.rows;
     res.json({ locals });
@@ -109,10 +125,8 @@ module.exports = (app, pool) => {
 });
 
 
-    // Função para encontrar uma rota usando busca em profundidade (DFS)
     function findRoute(graph, start, end, visited = new Set(), route = []) {
         if (start === end) {
-            // Chegou ao destino, retorne a rota encontrada
             return [...route, start];
         }
 
@@ -127,10 +141,9 @@ module.exports = (app, pool) => {
             }
         }
 
-        return null; // Rota não encontrada
+        return null;
     }
 
-    // Função para calcular a distância da rota
 function calculateDistance(graph, path) {
     let distance = 0;
 
@@ -138,16 +151,12 @@ function calculateDistance(graph, path) {
         const currentNode = path[i];
         const nextNode = path[i + 1];
 
-        // Verifique se há uma conexão direta entre currentNode e nextNode
         if (graph[currentNode] && graph[currentNode][nextNode]) {
             distance += parseInt(graph[currentNode][nextNode], 10);
         } else if (graph[nextNode] && graph[nextNode][currentNode]) {
-            // Se não houver conexão direta na primeira direção, verifique na direção oposta
             distance += parseInt(graph[nextNode][currentNode], 10);
         } else {
             console.error('Conexão não encontrada entre', currentNode, 'e', nextNode);
-            // Lide com o caso em que não há conexão direta nas duas direções
-            // Você pode lançar uma exceção, retornar um valor padrão, ou fazer algo diferente conforme necessário.
         }
     }
 

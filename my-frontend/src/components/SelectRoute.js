@@ -1,31 +1,30 @@
-// my-frontend/src/components/SelectRoute.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import NavBar from './NavBar';
+import './css.css';
 
 const SelectRoute = () => {
-  const [locals, setLocals] = useState([]); // Alteração no nome da variável
+  const [locals, setLocals] = useState([]);
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [route, setRoute] = useState([]);
   const [distance, setDistance] = useState(null);
 
   useEffect(() => {
-    // Ao montar o componente, busca as localizações disponíveis
-    const fetchLocals = async () => { // Alteração no nome da função
+    const fetchLocals = async () => {
       try {
-        const response = await axios.get('http://186.237.57.106:3001/get-locals', { // Alteração na rota
+        const response = await axios.get('http://186.237.57.106:3001/get-locals', { 
           headers: {
             Authorization: localStorage.getItem('token'),
           },
         });
-        setLocals(response.data.locals); // Alteração no nome da variável
+        setLocals(response.data.locals);
       } catch (error) {
-        console.error('Erro ao buscar locais:', error); // Alteração na mensagem de erro
+        console.error('Erro ao buscar locais:', error);
       }
     };
 
-    fetchLocals(); // Alteração no nome da função
+    fetchLocals(); 
   }, []);
 
   const handleSearchRoute = async () => {
@@ -46,39 +45,42 @@ const SelectRoute = () => {
 
   return (
     <div>
-      <h2>Selecionar Rota</h2>
-      <div>
-        <label>Origem:
-          <select value={origin} onChange={(e) => setOrigin(e.target.value)}>
-            <option value="">Selecione a Origem</option>
-            {locals.map((local) => ( // Alteração no nome da variável
-              <option key={local.id} value={local.id}> {/* Alteração no nome da variável */}
-                {local.name} {/* Alteração no nome da variável */}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <div>
-        <label>Destino:
-          <select value={destination} onChange={(e) => setDestination(e.target.value)}>
-            <option value="">Selecione o Destino</option>
-            {locals.map((local) => ( // Alteração no nome da variável
-              <option key={local.id} value={local.id}> {/* Alteração no nome da variável */}
-                {local.name} {/* Alteração no nome da variável */}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <button onClick={handleSearchRoute}>Buscar Rota</button>
-      {route.length > 0 && (
+      <NavBar />
+      <div className="select-route-container">
+        <h2>Selecionar Rota</h2>
         <div>
-          <h3>Rota Encontrada:</h3>
-          <p>{route.join(' -> ')}</p>
-          <p>Distância: {distance} unidades</p>
+          <label>Origem:
+            <select className="custom-select" value={origin} onChange={(e) => setOrigin(e.target.value)}>
+              <option value="">Selecione a Origem</option>
+              {locals.map((local) => (
+                <option key={local.id} value={local.id}>
+                  {local.name}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
-      )}
+        <div>
+          <label>Destino:
+            <select className="custom-select" value={destination} onChange={(e) => setDestination(e.target.value)}>
+              <option value="">Selecione o Destino</option>
+              {locals.map((local) => (
+                <option key={local.id} value={local.id}>
+                  {local.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <button className="search-button" onClick={handleSearchRoute}>Buscar Rota</button>
+        {route.length > 0 && (
+          <div>
+            <h3>Rota Encontrada:</h3>
+            <p>{route.join(' -> ')}</p>
+            <p>Distância: {distance} metros</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

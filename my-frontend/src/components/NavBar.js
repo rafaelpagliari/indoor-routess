@@ -7,19 +7,10 @@ const NavBar = () => {
       <div style={navContainerStyle}>
         <ul style={ulStyle}>
           <li style={liStyle}>
-            <Link to="/produtos" style={linkStyle}>Produtos</Link>
+            <Link to="/SelectRoute" style={linkStyle}>Rotas</Link>
           </li>
           <li style={liStyle}>
-            <Link to="/clientes" style={linkStyle}>Clientes</Link>
-          </li>
-          <li style={liStyle}>
-            <Link to="/funcionarios" style={linkStyle}>Funcionários</Link>
-          </li>
-          <li style={liStyle}>
-            <Link to="/pedidos" style={linkStyle}>Pedidos</Link>
-          </li>
-          <li style={liStyle}>
-            <Link to="/relatorio-producao" style={linkStyle}>Relatório</Link>
+            <Link to="/eventos" style={linkStyle}>Eventos</Link>
           </li>
           <li style={{ flex: '1', textAlign: 'right' }}>
             <Link to="/login" style={loginLinkStyle}>Login</Link>
