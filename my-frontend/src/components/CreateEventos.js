@@ -13,7 +13,7 @@ const CreateEventos = ({ history }) => {
   useEffect(() => {
     const fetchLocais = async () => {
       try {
-        const response = await axios.get('http://186.237.57.106:3001/get-locals', {
+        const response = await axios.get('http://186.237.58.74:3001/get-locals', {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
@@ -29,7 +29,7 @@ const CreateEventos = ({ history }) => {
 
   const handleCreateEvent = async () => {
     try {
-      await axios.post('http://186.237.57.106:3001/cadastro-evento', {
+      await axios.post('http://186.237.58.74:3001/cadastro-evento', {
         tipo,
         titulo,
         descricao,

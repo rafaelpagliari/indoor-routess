@@ -10,7 +10,7 @@ const Eventos = () => {
   useEffect(() => {
     const fetchEventList = async () => {
       try {
-        const response = await axios.get('http://186.237.57.106:3001/get-event-list', {
+        const response = await axios.get('http://186.237.58.74:3001/get-event-list', {
           headers: {
             Authorization: localStorage.getItem('token'),
           },

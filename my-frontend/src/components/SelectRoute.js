@@ -13,7 +13,7 @@ const SelectRoute = () => {
   useEffect(() => {
     const fetchLocals = async () => {
       try {
-        const response = await axios.get('http://186.237.57.106:3001/get-locals', { 
+        const response = await axios.get('http://186.237.58.74:3001/get-locals', { 
           headers: {
             Authorization: localStorage.getItem('token'),
           },
@@ -29,7 +29,7 @@ const SelectRoute = () => {
 
   const handleSearchRoute = async () => {
     try {
-      const response = await axios.get('http://186.237.57.106:3001/directions', {
+      const response = await axios.get('http://186.237.58.74:3001/directions', {
         headers: {
           Authorization: localStorage.getItem('token'),
         },

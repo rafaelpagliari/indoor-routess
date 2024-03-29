@@ -1,7 +1,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
-const verifyJWT = require('/var/www/html2/verifyJWT');
+const verifyJWT = require('/var/www/html/indoor-routess/verifyJWT');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const router = require('../routes/router');
