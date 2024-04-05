@@ -12,10 +12,10 @@ const NavBar = () => {
           <li style={liStyle}>
             <Link to="/eventos" style={linkStyle}>Eventos</Link>
           </li>
-	  <li style={liStyle}>
+          <li style={liStyle}>
             <Link to="/3" style={linkStyle}>Tela Teste</Link>
           </li>
-          <li style={{ flex: '1', textAlign: 'right' }}>
+          <li style={{ flex: '1', textAlign: 'right', marginLeft: '1rem' }}>
             <Link to="/login" style={loginLinkStyle}>Login</Link>
           </li>
         </ul>
@@ -27,10 +27,8 @@ const NavBar = () => {
 
 // Estilos
 const navStyle = {
-  background: '#fff', // Fundo branco
 //  padding: '0rem',
   textAlign: 'center',
-  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
 };
 
 const navContainerStyle = {
@@ -46,7 +44,7 @@ const ulStyle = {
 };
 
 const liStyle = {
-  margin: '0 1rem',
+  margin: '0 2rem', // Aumenta o espaçamento entre as opções
 };
 
 const linkStyle = {
@@ -60,7 +58,7 @@ const loginLinkStyle = {
   ...linkStyle,
   color: '#fff',
   backgroundColor: '#000', // Fundo preto
-  padding: '10px 50px',
+  padding: '10px 30px', // Aumenta o espaçamento do botão de login
   borderRadius: '5px',
   transition: 'background-color 0.3s ease-in-out',
 };
@@ -71,3 +69,4 @@ const hrStyle = {
 };
 
 export default NavBar;
+
