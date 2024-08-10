@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginNavBar from './LoginNavBar'; // Importando a nova LoginNavBar
 import imagem from './5.png'; // Importando a imagem
 
-const Login = ({ setToken }) => {
+const Login = ({ setToken, errorMessage }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -41,7 +41,6 @@ const Login = ({ setToken }) => {
         border: '2px solid #1E1F23', // Adiciona a borda preta
         boxShadow: '0px 0px 10px rgba(0,0,0,0.1)', // Adiciona o sombreado
     };
-    
 
     const containerStyle = {
         display: 'flex',
@@ -85,7 +84,7 @@ const Login = ({ setToken }) => {
 
     const titleStyle = {
         fontSize: '68px',
-	fontFamily: 'MingLiU-ExtB',// Alterando o tamanho da fonte
+        fontFamily: 'MingLiU-ExtB', // Alterando o tamanho da fonte
         color: '#fff',
         textAlign: 'center',
         marginBottom: '20px',
@@ -139,6 +138,7 @@ const Login = ({ setToken }) => {
                 <div style={contentStyle}>
                     <div style={innerBoxStyle}>
                         <h2 style={headerStyle}>Login</h2>
+                        {errorMessage && <p style={errorStyle}>{errorMessage}</p>}
                         {error && <p style={errorStyle}>{error}</p>}
                         <label>
                             Username:
