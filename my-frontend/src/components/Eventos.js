@@ -3,16 +3,21 @@ import axios from 'axios';
 import NavBar from './NavBar';
 import './eventos.css';
 import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 
-const Eventos = ({ token }) => {
+const Eventos = () => {
   const [eventos, setEventos] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+
     const fetchEventList = async () => {
       try {
         const response = await axios.get('http://186.237.58.74:3001/get-event-list', {
           headers: {
-            Authorization: localStorage.getItem('token'),
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -31,24 +36,45 @@ const Eventos = ({ token }) => {
     fetchEventList();
   }, []);
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://186.237.58.74:3001/delete-event/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      setEventos(eventos.filter(evento => evento.id !== id));
+    } catch (error) {
+      console.error('Erro ao excluir o evento:', error);
+    }
+  };
+
   return (
     <div className="container">
       <NavBar />
       <div className="content">
         <h2>Eventos</h2>
-        {token && (
-          <Link to="/CreateEventos">
-            <button>Criar Evento</button>
-          </Link>
+        {isLoggedIn && (
+          <div className="create-event-button-container">
+            <Link to="/CreateEventos">
+              <button className="create-event-button">Criar Evento</button>
+            </Link>
+          </div>
         )}
         <br />
         <div className="eventos-container">
-          {eventos.map((evento, index) => (
-            <div key={index} className="evento-box">
+          {eventos.map((evento) => (
+            <div key={evento.id} className="evento-box">
               <h3>{evento.titulo}</h3>
               <p>{evento.descricao}</p>
-              <p>Data: {evento.data}</p>
+              <p>Data: {format(new Date(evento.data), 'dd/MM/yyyy HH:mm')}</p>
               <p>Tipo: {evento.tipo}</p>
+              {isLoggedIn && (
+                <div className="delete-button-container">
+                  <button className="delete-button" onClick={() => handleDelete(evento.id)}>Excluir</button>
+                </div>
+              )}
             </div>
           ))}
         </div>

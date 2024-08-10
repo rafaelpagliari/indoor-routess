@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const NavBar = () => {
+  const isDesktop = window.innerWidth > 768; // Verifica se é desktop
+
   return (
     <nav style={navStyle}>
       <div style={navContainerStyle}>
@@ -12,12 +14,15 @@ const NavBar = () => {
           <li style={liStyle}>
             <Link to="/eventos" style={linkStyle}>Eventos</Link>
           </li>
-	  <li style={liStyle}>
+          <li style={liStyle}>
             <Link to="/3" style={linkStyle}>Tela Teste</Link>
           </li>
-          <li style={{ flex: '1', textAlign: 'right' }}>
-            <Link to="/login" style={loginLinkStyle}>Login</Link>
-          </li>
+          {/* Exibe o login apenas em dispositivos desktop */}
+          {isDesktop && (
+            <li style={{ ...liStyle, flex: '1', textAlign: 'right' }} className="login-link">
+              <Link to="/login" style={loginLinkStyle}>Login</Link>
+            </li>
+          )}
         </ul>
       </div>
       <hr style={hrStyle} /> {/* Adiciona um traço horizontal */}
@@ -71,3 +76,4 @@ const hrStyle = {
 };
 
 export default NavBar;
+
