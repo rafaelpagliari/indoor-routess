@@ -5,6 +5,7 @@ import Login from './components/Login';
 import SelectRoute from './components/SelectRoute';
 import Eventos from './components/Eventos';
 import CreateEventos from './components/CreateEventos';
+import './App.css';
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || null);
