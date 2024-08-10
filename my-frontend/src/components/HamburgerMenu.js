@@ -23,9 +23,6 @@ const HamburgerMenu = () => {
             <Link to="/eventos" className="hamburger-menu-link" onClick={toggleMenu}>Eventos</Link>
           </li>
           <li className="hamburger-menu-item">
-            <Link to="/3" className="hamburger-menu-link" onClick={toggleMenu}>Tela Teste</Link>
-          </li>
-          <li className="hamburger-menu-item">
             <Link to="/login" className="hamburger-menu-link" onClick={toggleMenu}>Login</Link>
           </li>
         </ul>
