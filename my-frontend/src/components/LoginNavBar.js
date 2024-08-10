@@ -15,7 +15,8 @@ const LoginNavBar = () => {
           <li style={liStyle}>
             <Link to="/3" style={linkStyle}>Tela Teste</Link>
           </li>
-          <li style={{ marginLeft: 'auto', marginRight: '1rem' }}> {/* Adiciona margem à direita */}
+          {/* Esconde o botão de login em dispositivos móveis */}
+          <li style={{ marginLeft: 'auto', marginRight: '1rem', display: 'none' }} className="login-link">
             <Link to="/login" style={loginLinkStyle}>Login</Link>
           </li>
         </ul>
