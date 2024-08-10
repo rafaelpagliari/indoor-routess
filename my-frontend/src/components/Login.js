@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginNavBar from './LoginNavBar'; // Importando a nova LoginNavBar
 import imagem from './5.png'; // Importando a imagem
 
-const Login = ({ setToken }) => {
+const Login = ({ setToken, errorMessage }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -31,13 +31,15 @@ const Login = ({ setToken }) => {
     };
 
     const innerBoxStyle = {
-        width: '100%', // Garante que a caixa ocupe toda a largura disponível
-        maxWidth: '400px', // Define uma largura máxima para a caixa de login
-        padding: '20px', // Adiciona espaço interno à caixa de login
-        display: 'flex', // Adiciona display flex
-        flexDirection: 'column', // Alinha os itens verticalmente
-        alignItems: 'center', // Centraliza horizontalmente
-        justifyContent: 'center', // Centraliza verticalmente
+        width: '100%',
+        maxWidth: '400px',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '2px solid #1E1F23', // Adiciona a borda preta
+        boxShadow: '0px 0px 10px rgba(0,0,0,0.1)', // Adiciona o sombreado
     };
 
     const containerStyle = {
@@ -56,6 +58,7 @@ const Login = ({ setToken }) => {
     const leftSideStyle = {
         flex: 1,
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
     };
@@ -77,6 +80,14 @@ const Login = ({ setToken }) => {
         marginBottom: '20px',
         color: '#1E1F23',
         textShadow: '0px 2px 2px rgba(255,255,255,0.1)',
+    };
+
+    const titleStyle = {
+        fontSize: '68px',
+        fontFamily: 'MingLiU-ExtB', // Alterando o tamanho da fonte
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: '20px',
     };
 
     const inputStyle = {
@@ -119,6 +130,7 @@ const Login = ({ setToken }) => {
     return (
         <div style={containerStyle}>
             <div style={leftSideStyle}>
+                <div style={titleStyle}>Indoor Routes</div>
                 <img src={imagem} alt="Imagem" style={imageStyle} />
             </div>
             <div style={rightSideStyle}>
@@ -126,6 +138,7 @@ const Login = ({ setToken }) => {
                 <div style={contentStyle}>
                     <div style={innerBoxStyle}>
                         <h2 style={headerStyle}>Login</h2>
+                        {errorMessage && <p style={errorStyle}>{errorMessage}</p>}
                         {error && <p style={errorStyle}>{error}</p>}
                         <label>
                             Username:

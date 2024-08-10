@@ -1,0 +1,94 @@
+.container {
+    display: flex;
+    height: 100vh; /* Garante que o container ocupe 100% da altura da tela */
+    margin: 0;
+    padding: 0;
+    background: #EBE8D9;
+}
+
+.left-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Alinha o conteúdo verticalmente ao centro */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    background: #1E1F23; /* Fundo escuro para a imagem e título */
+    padding: 20px;
+}
+
+.right-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Alinha o conteúdo verticalmente ao centro */
+    align-items: flex-start; /* Alinha o conteúdo ao início horizontalmente */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.inner-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #1E1F23;
+    background-color: #F5F5F5;
+}
+
+.header {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #1E1F23;
+    text-shadow: 0px 2px 2px rgba(255,255,255,0.1);
+}
+
+.title {
+    font-size: 68px;
+    font-family: MingLiU-ExtB;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 2px 2px rgba(0,0,0,0.1);
+}
+
+.button {
+    background: #1E1F23;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0px 2px 2px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.image {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain; /* Ajusta a imagem para caber no espaço sem distorção */
+    padding: 10px;
+}
+

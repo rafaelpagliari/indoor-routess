@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NavBar from './NavBar';
-import './css.css';
+import './eventos.css';
 import { Link } from 'react-router-dom';
 
-const Eventos = () => {
+const Eventos = ({ token }) => {
   const [eventos, setEventos] = useState([]);
 
   useEffect(() => {
@@ -36,10 +36,12 @@ const Eventos = () => {
       <NavBar />
       <div className="content">
         <h2>Eventos</h2>
-	  <Link to="/CreateEventos">
-        <button>Criar Evento</button>
-      </Link>
-	        <br />
+        {token && (
+          <Link to="/CreateEventos">
+            <button>Criar Evento</button>
+          </Link>
+        )}
+        <br />
         <div className="eventos-container">
           {eventos.map((evento, index) => (
             <div key={index} className="evento-box">

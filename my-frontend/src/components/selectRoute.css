@@ -1,0 +1,39 @@
+.select-route-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+h2 {
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.custom-select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+}
+
+button.search-button {
+  padding: 10px;
+  background-color: #e44d26;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+button.search-button:hover {
+  background-color: #d3381e;
+}
+
