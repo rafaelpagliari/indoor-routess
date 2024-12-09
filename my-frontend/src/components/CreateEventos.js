@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NavBar from './NavBar';
+import './createEventos.css';
 
 const CreateEventos = ({ history }) => {
   const [tipo, setTipo] = useState('');

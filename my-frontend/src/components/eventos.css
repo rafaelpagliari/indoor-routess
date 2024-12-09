@@ -1,0 +1,83 @@
+/* Estilo do container principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Estilo do container que agrupa todos os eventos */
+.eventos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centraliza os itens horizontalmente */
+    gap: 20px; /* Espaçamento entre os cartões */
+    padding: 20px;
+}
+
+/* Estilo individual de cada cartão de evento */
+.evento-box {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    max-width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(25% - 40px); /* 4 cartões por linha, com espaçamento */
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Garante que o botão fique no final da box */
+}
+
+/* Estilo do botão "Excluir" */
+.delete-button-container {
+    display: flex;
+    justify-content: flex-end; /* Posiciona o botão à direita */
+    margin-top: auto;
+}
+
+.delete-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+}
+
+.delete-button:hover {
+    background-color: #ff3333;
+}
+
+/* Estilo do botão "Criar Evento" */
+.create-event-button-container {
+    display: flex;
+    justify-content: center; /* Centraliza o botão na página */
+    margin-bottom: 20px;
+}
+
+.create-event-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    font-size: 16px;
+}
+
+.create-event-button:hover {
+    background-color: #45a049;
+}
+
+/* Estilo do título da página */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+

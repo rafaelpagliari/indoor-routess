@@ -35,8 +35,8 @@ module.exports = (app, pool) => {
         }
     });
 
-	app.get('/get-event-list', async (req, res) => {
-  const eventQuery = 'SELECT tipo, titulo, descricao, data FROM eventos';
+app.get('/get-event-list', async (req, res) => {
+  const eventQuery = 'SELECT id, tipo, titulo, descricao, data FROM eventos';
 
   try {
     const client = await pool.connect();
@@ -123,6 +123,28 @@ module.exports = (app, pool) => {
     res.status(500).json({ locals: [] });
   }
 });
+
+
+app.delete('/delete-event/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log('ID recebido para exclusão:', id); // Adicione este log
+
+    try {
+        const client = await pool.connect();
+        const result = await client.query('DELETE FROM eventos WHERE id = $1', [id]);
+        client.release();
+
+        if (result.rowCount > 0) {
+            res.status(200).json({ success: true, message: 'Evento excluído com sucesso.' });
+        } else {
+            res.status(404).json({ success: false, message: 'Evento não encontrado.' });
+        }
+    } catch (error) {
+        console.error('Erro ao excluir o evento:', error);
+        res.status(500).json({ success: false, message: 'Erro ao excluir o evento.' });
+    }
+});
+
 
 
     function findRoute(graph, start, end, visited = new Set(), route = []) {

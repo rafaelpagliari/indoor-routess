@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NavBar from './NavBar';
-import './css.css';
+import './selectRoute.css';
 
 const SelectRoute = () => {
   const [locals, setLocals] = useState([]);

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const NavBar = () => {
+const LoginNavBar = () => {
   return (
     <nav style={navStyle}>
       <div style={navContainerStyle}>
         <ul style={ulStyle}>
-          <li style={liStyle}>
+          <li style={{ ...liStyle, marginRight: 'auto' }}>
             <Link to="/SelectRoute" style={linkStyle}>Rotas</Link>
           </li>
           <li style={liStyle}>
@@ -15,7 +15,8 @@ const NavBar = () => {
           <li style={liStyle}>
             <Link to="/3" style={linkStyle}>Tela Teste</Link>
           </li>
-          <li style={{ flex: '1', textAlign: 'right', marginLeft: '1rem' }}>
+          {/* Esconde o botão de login em dispositivos móveis */}
+          <li style={{ marginLeft: 'auto', marginRight: '1rem', display: 'none' }} className="login-link">
             <Link to="/login" style={loginLinkStyle}>Login</Link>
           </li>
         </ul>
@@ -68,5 +69,5 @@ const hrStyle = {
   margin: '10px 0',
 };
 
-export default NavBar;
+export default LoginNavBar;
 
